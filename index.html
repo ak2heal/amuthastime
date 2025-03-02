@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Amutha's Time</title>
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+            .then(function() {
+                console.log('Service Worker Registered');
+            });
+        }
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        #timerDisplay {
+            font-size: 3em;
+            font-weight: bold;
+            margin: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffcc00;
+            display: inline-block;
+            width: 150px;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 10px;
+            margin: 20px auto;
+            height: 30px;
+            max-width: 400px;
+            overflow: hidden;
+            direction: ltr;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #4caf50; /* Starts green */
+            transition: width 1s linear, background-color 1s linear;
+            position: absolute;
+        }
+        .fire-effect {
+            background: linear-gradient(45deg, #ff4500, #ff6347, #ff0000, #ff4500);
+            animation: burnEffect 0.5s infinite alternate;
+        }
+        @keyframes burnEffect {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.5) saturate(1.5); }
+        }
+        button {
+            font-size: 1.2em;
+            margin: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #555;
+        }
+    </style>
+    <script>
+        let timer;
+        function startTimer(duration) {
+            clearInterval(timer);
+            let timeLeft = duration;
+            const display = document.getElementById("timerDisplay");
+            const progressBar = document.getElementById("progressBar");
+            
+            const totalTime = duration;
+            timer = setInterval(() => {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                display.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                
+                let progressPercentage = ((totalTime - timeLeft) / totalTime) * 100;
+                progressBar.style.width = `${progressPercentage}%`;
+
+                if (totalTime === 25 * 60) {
+                    if (progressPercentage > 80) {
+                        progressBar.style.backgroundColor = "#ff0000"; // Red for last 5 minutes
+                        progressBar.classList.add("fire-effect");
+                    } else if (progressPercentage > 60) {
+                        progressBar.style.backgroundColor = "#ff9800"; // Orange for middle
+                    } else {
+                        progressBar.style.backgroundColor = "#4caf50"; // Green for first 15 minutes
+                    }
+                } else {
+                    if (progressPercentage > 80) {
+                        progressBar.style.backgroundColor = "#ff0000"; // Red for last 10 minutes
+                        progressBar.classList.add("fire-effect");
+                    } else if (progressPercentage > 60) {
+                        progressBar.style.backgroundColor = "#ff9800"; // Orange for middle
+                    } else {
+                        progressBar.style.backgroundColor = "#4caf50"; // Green for first 30 minutes
+                    }
+                }
+
+                if (timeLeft === 0) {
+                    clearInterval(timer);
+                    alert("Time's up! Stay focused and keep going!");
+                }
+                timeLeft--;
+            }, 1000);
+        }
+    </script>
+</head>
+<body>
+    <h1>Amutha's Time</h1>
+    <h2>Heal from Within: Quantum Leap to Success</h2>
+    <h1>Countdown Timer</h1>
+    <p id="timerDisplay">25:00</p>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <button onclick="startTimer(25 * 60)">Start 25-Min Timer</button>
+    <button onclick="startTimer(50 * 60)">Start 50-Min Timer</button>
+    <button onclick="startTimer(5 * 60)">Start 5-Min Break</button>
+    
+    <footer>
+        &copy; 2025 Copyright. This is a copyrighted product of Amutha Kanthasamy.
+    </footer>
+</body>
+</html>
